@@ -1,6 +1,6 @@
 [project]
 name = "slobs-cli"
-version = "0.6.0"
+version = "0.6.1"
 description = "A command line application for Streamlabs Desktop"
 authors = [{ name = "onyx-and-iris", email = "code@onyxandiris.online" }]
 dependencies = ["pyslobs>=2.0.4", "asyncclick>=8.1.8"]
@@ -22,3 +22,10 @@ distribution = true
 [tool.pdm.scripts]
 cli.cmd = "slobs-cli {args}"
 cli.env_file = ".env"
+
+test.cmd = "pytest {args}"
+test.env_file = ".env"
+post_test.cmd = "python tests/teardown.py"
+
+[dependency-groups]
+test = ["pytest>=8.4.0", "pytest-randomly>=3.16.0"]

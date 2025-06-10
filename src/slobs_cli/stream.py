@@ -70,8 +70,12 @@ async def status(ctx: click.Context):
 
     async def _run():
         current_state = await ss.get_model()
-        status = current_state.streaming_status
-        click.echo(f"Current stream status: {status}")
+        active = current_state.streaming_status != "offline"
+
+        if active:
+            click.echo("Stream is currently active.")
+        else:
+            click.echo("Stream is currently inactive.")
         conn.close()
 
     async with create_task_group() as tg:
@@ -91,11 +95,10 @@ async def toggle(ctx: click.Context):
         current_state = await ss.get_model()
         active = current_state.streaming_status != "offline"
 
+        await ss.toggle_streaming()
         if active:
-            await ss.toggle_streaming()
             click.echo("Stream stopped.")
         else:
-            await ss.toggle_streaming()
             click.echo("Stream started.")
 
         conn.close()

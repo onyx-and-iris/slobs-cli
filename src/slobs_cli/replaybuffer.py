@@ -72,8 +72,11 @@ async def status(ctx: click.Context):
 
     async def _run():
         current_state = await ss.get_model()
-        status = current_state.replay_buffer_status
-        click.echo(f"Replay buffer status: {status}")
+        active = current_state.replay_buffer_status != "offline"
+        if active:
+            click.echo("Replay buffer is currently active.")
+        else:
+            click.echo("Replay buffer is currently inactive.")
         conn.close()
 
     async with create_task_group() as tg:
