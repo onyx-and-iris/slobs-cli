@@ -4,7 +4,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 
-A command line interface for Streamlabs Desktop
+A command line interface for the Streamlabs Desktop websocket API.
 
 For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
@@ -21,6 +21,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
 -   Python 3.10 or greater
 -   [Streamlabs Desktop][sl-desktop]
+-   A websocket token: Settings > Remote Control > API Token
 
 ## Installation
 
@@ -44,7 +45,7 @@ The CLI should now be discoverable as `slobs-cli`
 
 -   --domain/-d: Streamlabs client domain
 -   --port/-p Streamlabs client port
--   --token/-t: Remote Control API Token
+-   --token/-t: API Token
 
 Pass `--domain`, `--port` and `--token` as flags on the root command, for example:
 

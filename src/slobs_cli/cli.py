@@ -28,12 +28,11 @@ from pyslobs import ConnectionConfig, SlobsConnection
     help="The token for the SLOBS server.",
     envvar="SLOBS_TOKEN",
     show_envvar=True,
+    required=True,
 )
 @click.pass_context
 async def cli(ctx: click.Context, domain: str, port: int, token: str | None):
-    """
-    Command line interface for SLOBS.
-    """
+    """Command line interface for Streamlabs Desktop."""
     ctx.ensure_object(dict)
     config = ConnectionConfig(
         domain=domain,
