@@ -1,6 +1,6 @@
 import asyncclick as click
 from anyio import create_task_group
-from pyslobs import ScenesService
+from pyslobs import ScenesService, TransitionsService
 
 from .cli import cli
 
@@ -60,26 +60,57 @@ async def current(ctx: click.Context):
 
 @scene.command()
 @click.argument("scene_name", type=str)
+@click.option(
+    "--preview",
+    is_flag=True,
+    help="Switch the preview scene only.",
+)
 @click.pass_context
-async def switch(ctx: click.Context, scene_name: str):
+async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
     """Switch to a scene by its name."""
 
     conn = ctx.obj["connection"]
     ss = ScenesService(conn)
+    ts = TransitionsService(conn)
 
     async def _run():
         scenes = await ss.get_scenes()
         for scene in scenes:
             if scene.name == scene_name:
-                await ss.make_scene_active(scene.id)
-                click.echo(f"Switched to scene: {click.style(scene.name, fg='green')}")
-                conn.close()
+                current_state = await ts.get_model()
+
+                if current_state.studio_mode:
+                    await ss.make_scene_active(scene.id)
+                    if preview:
+                        click.echo(
+                            f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in preview mode."
+                        )
+                    else:
+                        await ts.execute_studio_mode_transition()
+                        click.echo(
+                            f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in active mode."
+                        )
+                else:
+                    if preview:
+                        conn.close()
+                        raise click.Abort(
+                            click.style(
+                                "Cannot switch to preview scene in non-studio mode.",
+                                fg="red",
+                            )
+                        )
+
+                    await ss.make_scene_active(scene.id)
+                    click.echo(
+                        f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in active mode."
+                    )
                 break
         else:
             conn.close()
             raise click.ClickException(
                 click.style(f"Scene '{scene_name}' not found.", fg="red")
             )
+        conn.close()
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
