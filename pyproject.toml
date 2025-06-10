@@ -1,6 +1,6 @@
 [project]
 name = "slobs-cli"
-version = "0.1.1"
+version = "0.2.0"
 description = "A command line application for Streamlabs Desktop"
 authors = [{ name = "onyx-and-iris", email = "code@onyxandiris.online" }]
 dependencies = ["pyslobs>=2.0.4", "asyncclick>=8.1.8"]
