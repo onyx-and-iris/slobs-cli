@@ -121,25 +121,25 @@ slobs-cli stream toggle
 
 #### Record
 
--   start   Start recording.
+-   start: Start recording.
 
 ```console
 slobs-cli record start
 ```
 
--   stop    Stop recording.
+-   stop: Stop recording.
 
 ```console
 slobs-cli record stop
 ```
 
--   status  Get recording status.
+-   status: Get recording status.
 
 ```console
 slobs-cli record status
 ```
 
--   toggle  Toggle recording status.
+-   toggle: Toggle recording status.
 
 ```console
 slobs-cli record toggle
@@ -176,7 +176,7 @@ slobs-cli audio toggle "Mic/Aux"
 
 #### Replay Buffer
 
--   start   Start the replay buffer.
+-   start: Start the replay buffer.
 
 ```console
 slobs-cli replaybuffer start
