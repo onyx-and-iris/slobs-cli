@@ -46,7 +46,7 @@ The CLI should now be discoverable as `slobs-cli`
 -   --port/-p Streamlabs client port
 -   --token/-t: Remote Control API Token
 
-Pass `--domain`, `--port` and `--password` as flags on the root command, for example:
+Pass `--domain`, `--port` and `--token` as flags on the root command, for example:
 
 ```console
 slobs-cli --domain localhost --port 59650 --token <websocket password> --help
