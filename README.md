@@ -101,16 +101,16 @@ slobs-cli scene switch "slobs-test-scene-1"
 slobs-cli stream start
 ```
 
--   status: Get the current stream status.
-
-```console
-slobs-cli stream start
-```
-
 -   stop: Stop the stream.
 
 ```console
 slobs-cli stream stop
+```
+
+-   status: Get the current stream status.
+
+```console
+slobs-cli stream status
 ```
 
 -   toggle: Toggle the stream status.
@@ -127,22 +127,22 @@ slobs-cli stream toggle
 slobs-cli record start
 ```
 
--   status  Get recording status.
-
-```console
-slobs-cli record status
-```
-
 -   stop    Stop recording.
 
 ```console
 slobs-cli record stop
 ```
 
--   toggle  Toggle recording status.
+-   status  Get recording status.
 
 ```console
 slobs-cli record status
+```
+
+-   toggle  Toggle recording status.
+
+```console
+slobs-cli record toggle
 ```
 
 #### Audio
@@ -157,21 +157,21 @@ slobs-cli audio list
     -   args: <source_name>
 
 ```console
-slobs-cli audio list
+slobs-cli audio mute "Mic/Aux"
 ```
 
 -   unmute: Unmute an audio source by name.
     -   args: <source_name>
 
 ```console
-slobs-cli audio list
+slobs-cli audio unmute "Mic/Aux"
 ```
 
 -   toggle: Toggle mute state of an audio source by name.
     -   args: <source_name>
 
 ```console
-slobs-cli audio list
+slobs-cli audio toggle "Mic/Aux"
 ```
 
 #### Replay Buffer
