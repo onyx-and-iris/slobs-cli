@@ -7,7 +7,7 @@ from pyslobs import ConnectionConfig, SlobsConnection
 @click.option(
     "-d",
     "--domain",
-    default="localhost",
+    default="127.0.0.1",
     show_default=True,
     show_envvar=True,
     help="The domain of the SLOBS server.",
