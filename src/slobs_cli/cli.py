@@ -5,6 +5,7 @@ from pyslobs import ConnectionConfig, SlobsConnection
 
 @click.group()
 @click.option(
+    "-d",
     "--domain",
     default="localhost",
     show_default=True,
@@ -13,6 +14,7 @@ from pyslobs import ConnectionConfig, SlobsConnection
     envvar="SLOBS_DOMAIN",
 )
 @click.option(
+    "-p",
     "--port",
     default=59650,
     show_default=True,
@@ -21,6 +23,7 @@ from pyslobs import ConnectionConfig, SlobsConnection
     envvar="SLOBS_PORT",
 )
 @click.option(
+    "-t",
     "--token",
     help="The token for the SLOBS server.",
     envvar="SLOBS_TOKEN",
