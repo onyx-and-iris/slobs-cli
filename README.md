@@ -232,3 +232,7 @@ slobs-cli studiomode status
 ```console
 slobs-cli studiomode force-transition
 ```
+
+## Special Thanks
+
+-   [Julian-0](https://github.com/Julian-O) For writing the [PySLOBS wrapper](https://github.com/Julian-O/PySLOBS) on which this CLI depends.
