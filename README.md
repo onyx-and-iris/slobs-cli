@@ -49,7 +49,7 @@ The CLI should now be discoverable as `slobs-cli`
 Pass `--domain`, `--port` and `--token` as flags on the root command, for example:
 
 ```console
-slobs-cli --domain localhost --port 59650 --token <websocket password> --help
+slobs-cli --domain localhost --port 59650 --token <API token> --help
 ```
 
 #### Environment Variables
