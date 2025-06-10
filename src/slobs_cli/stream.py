@@ -18,7 +18,7 @@ async def start(ctx: click.Context):
     conn = ctx.obj["connection"]
     ss = StreamingService(conn)
 
-    async def _run(conn):
+    async def _run():
         current_state = await ss.get_model()
         active = current_state.streaming_status != "offline"
 
@@ -32,7 +32,7 @@ async def start(ctx: click.Context):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)
 
 
 @stream.command()
@@ -43,7 +43,7 @@ async def stop(ctx: click.Context):
     conn = ctx.obj["connection"]
     ss = StreamingService(conn)
 
-    async def _run(conn):
+    async def _run():
         current_state = await ss.get_model()
         active = current_state.streaming_status != "offline"
 
@@ -57,7 +57,7 @@ async def stop(ctx: click.Context):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)
 
 
 @stream.command()
@@ -68,7 +68,7 @@ async def status(ctx: click.Context):
     conn = ctx.obj["connection"]
     ss = StreamingService(conn)
 
-    async def _run(conn):
+    async def _run():
         current_state = await ss.get_model()
         status = current_state.streaming_status
         click.echo(f"Current stream status: {status}")
@@ -76,7 +76,7 @@ async def status(ctx: click.Context):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)
 
 
 @stream.command()
@@ -87,7 +87,7 @@ async def toggle(ctx: click.Context):
     conn = ctx.obj["connection"]
     ss = StreamingService(conn)
 
-    async def _run(conn):
+    async def _run():
         current_state = await ss.get_model()
         active = current_state.streaming_status != "offline"
 
@@ -102,4 +102,4 @@ async def toggle(ctx: click.Context):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)

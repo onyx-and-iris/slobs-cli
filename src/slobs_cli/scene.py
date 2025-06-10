@@ -43,7 +43,7 @@ async def current(ctx: click.Context):
     conn = ctx.obj["connection"]
     ss = ScenesService(conn)
 
-    async def _run(conn):
+    async def _run():
         active_scene = await ss.active_scene()
         if active_scene:
             click.echo(
@@ -55,7 +55,7 @@ async def current(ctx: click.Context):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)
 
 
 @scene.command()
@@ -67,7 +67,7 @@ async def switch(ctx: click.Context, scene_name: str):
     conn = ctx.obj["connection"]
     ss = ScenesService(conn)
 
-    async def _run(conn):
+    async def _run():
         scenes = await ss.get_scenes()
         for scene in scenes:
             if scene.name == scene_name:
@@ -83,4 +83,4 @@ async def switch(ctx: click.Context, scene_name: str):
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
-        tg.start_soon(_run, conn)
+        tg.start_soon(_run)
