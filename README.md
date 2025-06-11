@@ -14,7 +14,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Commands](#root-typer)
+- [Commands](#commands)
 - [License](#license)
 
 ## Requirements
@@ -236,3 +236,7 @@ slobs-cli studiomode force-transition
 ## Special Thanks
 
 -   [Julian-0](https://github.com/Julian-O) For writing the [PySLOBS wrapper](https://github.com/Julian-O/PySLOBS) on which this CLI depends.
+
+## License
+
+`slobs-cli` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
