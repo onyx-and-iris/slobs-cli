@@ -19,8 +19,8 @@ async def enable(ctx: click.Context):
     ts = TransitionsService(conn)
 
     async def _run():
-        current_state = await ts.get_model()
-        if current_state.studio_mode:
+        model = await ts.get_model()
+        if model.studio_mode:
             conn.close()
             raise click.Abort(click.style("Studio mode is already enabled.", fg="red"))
 
@@ -42,8 +42,8 @@ async def disable(ctx: click.Context):
     ts = TransitionsService(conn)
 
     async def _run():
-        current_state = await ts.get_model()
-        if not current_state.studio_mode:
+        model = await ts.get_model()
+        if not model.studio_mode:
             conn.close()
             raise click.Abort(click.style("Studio mode is already disabled.", fg="red"))
 
@@ -65,8 +65,8 @@ async def status(ctx: click.Context):
     ts = TransitionsService(conn)
 
     async def _run():
-        current_state = await ts.get_model()
-        if current_state.studio_mode:
+        model = await ts.get_model()
+        if model.studio_mode:
             click.echo("Studio mode is currently enabled.")
         else:
             click.echo("Studio mode is currently disabled.")
@@ -86,8 +86,8 @@ async def toggle(ctx: click.Context):
     ts = TransitionsService(conn)
 
     async def _run():
-        current_state = await ts.get_model()
-        if current_state.studio_mode:
+        model = await ts.get_model()
+        if model.studio_mode:
             await ts.disable_studio_mode()
             click.echo("Studio mode disabled successfully.")
         else:
@@ -109,8 +109,8 @@ async def force_transition(ctx: click.Context):
     ts = TransitionsService(conn)
 
     async def _run():
-        current_state = await ts.get_model()
-        if not current_state.studio_mode:
+        model = await ts.get_model()
+        if not model.studio_mode:
             conn.close()
             raise click.Abort(click.style("Studio mode is not enabled.", fg="red"))
 

@@ -19,8 +19,8 @@ async def start(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.streaming_status != "offline"
+        model = await ss.get_model()
+        active = model.streaming_status != "offline"
 
         if active:
             conn.close()
@@ -44,8 +44,8 @@ async def stop(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.streaming_status != "offline"
+        model = await ss.get_model()
+        active = model.streaming_status != "offline"
 
         if not active:
             conn.close()
@@ -69,8 +69,8 @@ async def status(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.streaming_status != "offline"
+        model = await ss.get_model()
+        active = model.streaming_status != "offline"
 
         if active:
             click.echo("Stream is currently active.")
@@ -92,8 +92,8 @@ async def toggle(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.streaming_status != "offline"
+        model = await ss.get_model()
+        active = model.streaming_status != "offline"
 
         await ss.toggle_streaming()
         if active:

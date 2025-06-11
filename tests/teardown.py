@@ -13,12 +13,12 @@ async def cleanup(conn: SlobsConnection):
             await ss.remove_scene(scene.id)
 
     ss = StreamingService(conn)
-    current_state = await ss.get_model()
-    if current_state.streaming_status != "offline":
+    model = await ss.get_model()
+    if model.streaming_status != "offline":
         await ss.toggle_streaming()
-    if current_state.replay_buffer_status != "offline":
+    if model.replay_buffer_status != "offline":
         await ss.stop_replay_buffer()
-    if current_state.recording_status != "offline":
+    if model.recording_status != "offline":
         await ss.toggle_recording()
 
     conn.close()

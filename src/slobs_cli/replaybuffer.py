@@ -19,8 +19,8 @@ async def start(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.replay_buffer_status != "offline"
+        model = await ss.get_model()
+        active = model.replay_buffer_status != "offline"
 
         if active:
             conn.close()
@@ -44,8 +44,8 @@ async def stop(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.replay_buffer_status != "offline"
+        model = await ss.get_model()
+        active = model.replay_buffer_status != "offline"
 
         if not active:
             conn.close()
@@ -71,8 +71,8 @@ async def status(ctx: click.Context):
     ss = StreamingService(conn)
 
     async def _run():
-        current_state = await ss.get_model()
-        active = current_state.replay_buffer_status != "offline"
+        model = await ss.get_model()
+        active = model.replay_buffer_status != "offline"
         if active:
             click.echo("Replay buffer is currently active.")
         else:

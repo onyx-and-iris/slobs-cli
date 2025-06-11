@@ -77,9 +77,9 @@ async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
         scenes = await ss.get_scenes()
         for scene in scenes:
             if scene.name == scene_name:
-                current_state = await ts.get_model()
+                model = await ts.get_model()
 
-                if current_state.studio_mode:
+                if model.studio_mode:
                     await ss.make_scene_active(scene.id)
                     if preview:
                         click.echo(
@@ -104,13 +104,13 @@ async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
                     click.echo(
                         f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in active mode."
                     )
+                conn.close()
                 break
         else:
             conn.close()
             raise click.ClickException(
                 click.style(f"Scene '{scene_name}' not found.", fg="red")
             )
-        conn.close()
 
     async with create_task_group() as tg:
         tg.start_soon(conn.background_processing)
