@@ -27,6 +27,7 @@ path = "src/slobs_cli/__about__.py"
 cli.cmd = "slobs-cli {args}"
 cli.env_file = ".env"
 
+pre_test.cmd = "python tests/setup.py"
 test.cmd = "pytest {args}"
 test.env_file = ".env"
 post_test.cmd = "python tests/teardown.py"

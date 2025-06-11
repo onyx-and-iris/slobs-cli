@@ -2,10 +2,16 @@ import os
 
 import anyio
 from anyio import create_task_group
-from pyslobs import ConnectionConfig, SlobsConnection, StreamingService
+from pyslobs import ConnectionConfig, ScenesService, SlobsConnection, StreamingService
 
 
 async def cleanup(conn: SlobsConnection):
+    ss = ScenesService(conn)
+    scenes = await ss.get_scenes()
+    for scene in scenes:
+        if scene.name.startswith("slobs-test-scene-"):
+            await ss.remove_scene(scene.id)
+
     ss = StreamingService(conn)
     current_state = await ss.get_model()
     if current_state.streaming_status != "offline":
