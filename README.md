@@ -19,7 +19,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
 ## Requirements
 
--   Python 3.10 or greater
+-   Python 3.11 or greater
 -   [Streamlabs Desktop][sl-desktop]
 -   A websocket token: Settings > Remote Control > API Token
 
