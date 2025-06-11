@@ -2,6 +2,8 @@ import anyio
 import asyncclick as click
 from pyslobs import ConnectionConfig, SlobsConnection
 
+from .__about__ import __version__ as version
+
 
 @click.group()
 @click.option(
@@ -29,6 +31,9 @@ from pyslobs import ConnectionConfig, SlobsConnection
     envvar="SLOBS_TOKEN",
     show_envvar=True,
     required=True,
+)
+@click.version_option(
+    version, "-v", "--version", message="%(prog)s version: %(version)s"
 )
 @click.pass_context
 async def cli(ctx: click.Context, domain: str, port: int, token: str | None):

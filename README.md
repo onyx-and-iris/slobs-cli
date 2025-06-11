@@ -46,6 +46,7 @@ The CLI should now be discoverable as `slobs-cli`
 -   --domain/-d: Streamlabs client domain
 -   --port/-p Streamlabs client port
 -   --token/-t: API Token
+-   --version/-v: Print the slobs-cli version
 
 Pass `--domain`, `--port` and `--token` as flags on the root command, for example:
 
