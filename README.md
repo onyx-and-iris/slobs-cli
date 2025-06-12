@@ -73,12 +73,20 @@ Flags can be used to override environment variables.
 #### Scene
 
 -   list: List all available scenes.
+    -   flags:
+
+        *optional*
+        -   --id: Include scene IDs in the output.
 
 ```console
 slobs-cli scene list
 ```
 
 -   current: Show the currently active scene.
+    -   flags:
+
+        *optional*
+        -   --id: Include scene IDs in the output.
 
 ```console
 slobs-cli scene current
@@ -88,7 +96,8 @@ slobs-cli scene current
     -   flags:
 
         *optional*
-        -   --preview: Switch the preview scene only.
+        -   --id: Include scene IDs in the output.
+        -   --preview: Switch the preview scene.
     -   args: <scene_name>
 
 ```console
@@ -150,6 +159,10 @@ slobs-cli record toggle
 #### Audio
 
 -   list: List all audio sources.
+    -   flags:
+
+        *optional*
+        -   --id: Include audio source IDs in the output.
 
 ```console
 slobs-cli audio list
