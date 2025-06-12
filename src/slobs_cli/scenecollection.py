@@ -75,7 +75,7 @@ async def load(ctx: click.Context, scenecollection_name: str):
         for collection in collections:
             if collection.name == scenecollection_name:
                 break
-        else:
+        else:  # If no collection by the given name was found
             conn.close()
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
@@ -123,7 +123,7 @@ async def delete(ctx: click.Context, scenecollection_name: str):
         for collection in collections:
             if collection.name == scenecollection_name:
                 break
-        else:
+        else:  # If no collection by the given name was found
             conn.close()
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
@@ -154,7 +154,7 @@ async def rename(ctx: click.Context, scenecollection_name: str, new_name: str):
         for collection in collections:
             if collection.name == scenecollection_name:
                 break
-        else:
+        else:  # If no collection by the given name was found
             conn.close()
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
