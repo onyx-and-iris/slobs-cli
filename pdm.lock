@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:87714b892affeadd7dba57d9430f0af3dc46f50cc9d095942367e4fca103f61e"
+content_hash = "sha256:e24474fa487e6f512b9c1f5a97aaabf58ed6164fb084f12e954ec59f1c4f8545"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -247,6 +247,17 @@ groups = ["default"]
 files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
+]
+
+[[package]]
+name = "terminaltables3"
+version = "4.0.0"
+requires_python = ">=3.8"
+summary = "Generate simple tables in terminals from a nested list of strings. Fork of terminaltables."
+groups = ["default"]
+files = [
+    {file = "terminaltables3-4.0.0-py3-none-any.whl", hash = "sha256:93b4c722f35400a7869cd630e2bbab616b129d1c47c628765c7f47baab2ca270"},
+    {file = "terminaltables3-4.0.0.tar.gz", hash = "sha256:4e3eefe209aa89005a0a34d1525739424569729ee29b5e64a8dd51c5ebdab77f"},
 ]
 
 [[package]]

@@ -1,6 +1,7 @@
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import ScenesService, TransitionsService
+from terminaltables3 import AsciiTable
 
 from .cli import cli
 from .errors import SlobsCliError
@@ -29,18 +30,27 @@ async def list(ctx: click.Context, id: bool = False):
 
         active_scene = await ss.active_scene()
 
-        click.echo("Available scenes:")
+        table_data = [
+            ["Scene Name", "ID", "Active"] if id else ["Scene Name", "Active"]
+        ]
         for scene in scenes:
             if scene.id == active_scene.id:
-                click.echo(
-                    f"- {click.style(scene.name, fg='green')} "
-                    f"{f'(ID: {scene.id})' if id else ''} [Active]"
-                )
+                to_append = [f"{click.style(scene.name, fg='green')}"]
             else:
-                click.echo(
-                    f"- {click.style(scene.name, fg='blue')} "
-                    f"{f'(ID: {scene.id})' if id else ''}"
-                )
+                to_append = [f"{click.style(scene.name, fg='blue')}"]
+            if id:
+                to_append.append(f"{scene.id}")
+            to_append.append("✅" if scene.id == active_scene.id else "")
+
+            table_data.append(to_append)
+
+        table = AsciiTable(table_data)
+        table.justify_columns = {
+            0: "left",
+            1: "left" if id else "center",
+            2: "center" if id else None,
+        }
+        click.echo(table.table)
 
         conn.close()
 

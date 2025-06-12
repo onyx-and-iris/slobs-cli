@@ -1,6 +1,7 @@
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import AudioService
+from terminaltables3 import AsciiTable
 
 from .cli import cli
 from .errors import SlobsCliError
@@ -27,14 +28,25 @@ async def list(ctx: click.Context, id: bool = False):
             conn.close()
             return
 
-        click.echo("Available audio sources:")
+        table_data = [["Audio Name", "ID", "Muted"] if id else ["Name", "Muted"]]
         for source in sources:
             model = await source.get_model()
-            click.echo(
-                f"- {click.style(model.name, fg='blue')} "
-                f"{f'ID: {model.source_id}, ' if id else ''}"
-                f"Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')}"
-            )
+
+            to_append = [f"{click.style(model.name, fg='blue')}"]
+            if id:
+                to_append.append(f"{model.source_id}")
+            to_append.append("✅" if model.muted else "❌")
+
+            table_data.append(to_append)
+
+        table = AsciiTable(table_data)
+        table.justify_columns = {
+            0: "left",
+            1: "left" if id else "center",
+            2: "center" if id else None,
+        }
+        click.echo(table.table)
+
         conn.close()
 
     async with create_task_group() as tg:
