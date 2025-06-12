@@ -29,7 +29,11 @@ async def list(ctx: click.Context, id: bool = False):
             conn.close()
             return
 
-        table_data = [['Audio Name', 'ID', 'Muted'] if id else ['Name', 'Muted']]
+        table_data = [
+            ['Audio Device Name', 'ID', 'Muted']
+            if id
+            else ['Audio Device Name', 'Muted']
+        ]
         for source in sources:
             model = await source.get_model()
 
