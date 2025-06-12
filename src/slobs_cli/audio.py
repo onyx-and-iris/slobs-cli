@@ -22,25 +22,22 @@ async def list(ctx: click.Context):
     async def _run():
         sources = await as_.get_sources()
         if not sources:
-            conn.close()
             click.echo("No audio sources found.")
+            conn.close()
             return
 
         click.echo("Available audio sources:")
         for source in sources:
             model = await source.get_model()
             click.echo(
-                f"- {click.style(model.name, fg='blue')} (ID: {model.source_id}, Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')})"
+                f"- {click.style(model.name, fg='blue')} (ID: {model.source_id}, "
+                f"Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')})"
             )
         conn.close()
 
-    try:
-        async with create_task_group() as tg:
-            tg.start_soon(conn.background_processing)
-            tg.start_soon(_run)
-    except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+    async with create_task_group() as tg:
+        tg.start_soon(conn.background_processing)
+        tg.start_soon(_run)
 
 
 @audio.command()
