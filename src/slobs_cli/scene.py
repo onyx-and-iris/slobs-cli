@@ -111,6 +111,7 @@ async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
                 conn.close()
                 break
         else:  # If no scene by the given name was found
+            conn.close()
             raise SlobsCliError(f"Scene '{scene_name}' not found.")
 
     try:
