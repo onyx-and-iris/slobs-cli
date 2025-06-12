@@ -12,8 +12,9 @@ def scene():
 
 
 @scene.command()
+@click.option("--id", is_flag=True, help="Include scene IDs in the output.")
 @click.pass_context
-async def list(ctx: click.Context):
+async def list(ctx: click.Context, id: bool = False):
     """List all available scenes."""
 
     conn = ctx.obj["connection"]
@@ -32,10 +33,14 @@ async def list(ctx: click.Context):
         for scene in scenes:
             if scene.id == active_scene.id:
                 click.echo(
-                    f"- {click.style(scene.name, fg='green')} (ID: {scene.id}) [Active]"
+                    f"- {click.style(scene.name, fg='green')} "
+                    f"{f'(ID: {scene.id})' if id else ''} [Active]"
                 )
             else:
-                click.echo(f"- {click.style(scene.name, fg='blue')} (ID: {scene.id})")
+                click.echo(
+                    f"- {click.style(scene.name, fg='blue')} "
+                    f"{f'(ID: {scene.id})' if id else ''}"
+                )
 
         conn.close()
 
@@ -45,8 +50,9 @@ async def list(ctx: click.Context):
 
 
 @scene.command()
+@click.option("--id", is_flag=True, help="Include scene IDs in the output.")
 @click.pass_context
-async def current(ctx: click.Context):
+async def current(ctx: click.Context, id: bool = False):
     """Show the currently active scene."""
 
     conn = ctx.obj["connection"]
@@ -55,7 +61,8 @@ async def current(ctx: click.Context):
     async def _run():
         active_scene = await ss.active_scene()
         click.echo(
-            f"Current active scene: {click.style(active_scene.name, fg='green')} (ID: {active_scene.id})"
+            f"Current active scene: {click.style(active_scene.name, fg='green')} "
+            f"{f'(ID: {active_scene.id})' if id else ''}"
         )
         conn.close()
 
@@ -65,6 +72,7 @@ async def current(ctx: click.Context):
 
 
 @scene.command()
+@click.option("--id", is_flag=True, help="Include scene IDs in the output.")
 @click.argument("scene_name", type=str)
 @click.option(
     "--preview",
@@ -72,7 +80,9 @@ async def current(ctx: click.Context):
     help="Switch the preview scene only.",
 )
 @click.pass_context
-async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
+async def switch(
+    ctx: click.Context, scene_name: str, preview: bool = False, id: bool = False
+):
     """Switch to a scene by its name."""
 
     conn = ctx.obj["connection"]
@@ -89,23 +99,29 @@ async def switch(ctx: click.Context, scene_name: str, preview: bool = False):
                     await ss.make_scene_active(scene.id)
                     if preview:
                         click.echo(
-                            f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in preview mode."
+                            f"Switched to preview scene: {click.style(scene.name, fg='blue')} "
+                            f"{f'(ID: {scene.id}).' if id else ''}"
                         )
                     else:
+                        click.echo(
+                            f"Switched to scene: {click.style(scene.name, fg='blue')} "
+                            f"{f'(ID: {scene.id}).' if id else ''}"
+                        )
                         await ts.execute_studio_mode_transition()
                         click.echo(
-                            f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in active mode."
+                            "Executed studio mode transition to make the scene active."
                         )
                 else:
                     if preview:
                         conn.close()
                         raise SlobsCliError(
-                            "Cannot switch to preview scene in non-studio mode."
+                            "Cannot switch the preview scene in non-studio mode."
                         )
 
                     await ss.make_scene_active(scene.id)
                     click.echo(
-                        f"Switched to scene: {click.style(scene.name, fg='blue')} (ID: {scene.id}) in active mode."
+                        f"Switched to scene: {click.style(scene.name, fg='blue')} "
+                        f"{f'(ID: {scene.id}).' if id else ''}"
                     )
 
                 conn.close()

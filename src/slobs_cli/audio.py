@@ -12,8 +12,9 @@ def audio():
 
 
 @audio.command()
+@click.option("--id", is_flag=True, help="Include audio source IDs in the output.")
 @click.pass_context
-async def list(ctx: click.Context):
+async def list(ctx: click.Context, id: bool = False):
     """List all audio sources."""
 
     conn = ctx.obj["connection"]
@@ -30,8 +31,9 @@ async def list(ctx: click.Context):
         for source in sources:
             model = await source.get_model()
             click.echo(
-                f"- {click.style(model.name, fg='blue')} (ID: {model.source_id}, "
-                f"Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')})"
+                f"- {click.style(model.name, fg='blue')} "
+                f"{f'ID: {model.source_id}, ' if id else ''}"
+                f"Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')}"
             )
         conn.close()
 

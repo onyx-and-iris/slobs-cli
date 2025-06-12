@@ -36,7 +36,7 @@ from .__about__ import __version__ as version
     version, "-v", "--version", message="%(prog)s version: %(version)s"
 )
 @click.pass_context
-async def cli(ctx: click.Context, domain: str, port: int, token: str | None):
+async def cli(ctx: click.Context, domain: str, port: int, token: str):
     """Command line interface for Streamlabs Desktop."""
     ctx.ensure_object(dict)
     config = ConnectionConfig(
