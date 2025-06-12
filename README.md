@@ -247,6 +247,46 @@ slobs-cli studiomode status
 slobs-cli studiomode force-transition
 ```
 
+#### Scene Collection
+
+-   list: List all scene collections.
+    -   flags:
+
+        *optional*
+        -   --id: Include scenecollection IDs in the output.
+
+```console
+slobs-cli scenecollection list
+```
+
+-   create: Create a new scene collection.
+    -   args: <scenecollection_name>
+
+```console
+slobs-cli scenecollection create "NewCollection"
+```
+
+-   delete: Delete a scene collection by name.
+    -   args: <scenecollection_name>
+
+```console
+slobs-cli scenecollection delete "ExistingCollection"
+```
+
+-   load: Load a scene collection by name.
+    -   args: <scenecollection_name>
+
+```console
+slobs-cli scenecollection load "ExistingCollection"
+```
+
+-   rename: Rename a scene collection.
+    -   args: <scenecollection_name> <new_name>
+
+```console
+slobs-cli scenecollection rename "ExistingCollection" "NewName"
+```
+
 ## Special Thanks
 
 -   [Julian-0](https://github.com/Julian-O) For writing the [PySLOBS wrapper](https://github.com/Julian-O/PySLOBS) on which this CLI depends.
