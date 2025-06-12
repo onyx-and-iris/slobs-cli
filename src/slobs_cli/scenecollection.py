@@ -63,7 +63,7 @@ async def list(ctx: click.Context, id: bool):
 
 
 @scenecollection.command()
-@click.argument('scenecollection_name', required=True)
+@click.argument('scenecollection_name')
 @click.pass_context
 async def load(ctx: click.Context, scenecollection_name: str):
     """Load a scene collection by name."""
@@ -93,7 +93,7 @@ async def load(ctx: click.Context, scenecollection_name: str):
 
 
 @scenecollection.command()
-@click.argument('scenecollection_name', required=True)
+@click.argument('scenecollection_name')
 @click.pass_context
 async def create(ctx: click.Context, scenecollection_name: str):
     """Create a new scene collection."""
@@ -111,7 +111,7 @@ async def create(ctx: click.Context, scenecollection_name: str):
 
 
 @scenecollection.command()
-@click.argument('scenecollection_name', required=True)
+@click.argument('scenecollection_name')
 @click.pass_context
 async def delete(ctx: click.Context, scenecollection_name: str):
     """Delete a scene collection by name."""
@@ -141,8 +141,8 @@ async def delete(ctx: click.Context, scenecollection_name: str):
 
 
 @scenecollection.command()
-@click.argument('scenecollection_name', required=True)
-@click.argument('new_name', required=True)
+@click.argument('scenecollection_name')
+@click.argument('new_name')
 @click.pass_context
 async def rename(ctx: click.Context, scenecollection_name: str, new_name: str):
     """Rename a scene collection."""
