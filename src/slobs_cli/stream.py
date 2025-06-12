@@ -1,3 +1,5 @@
+"""module for managing the replay buffer in Slobs CLI."""
+
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import StreamingService
@@ -8,27 +10,26 @@ from .errors import SlobsCliError
 
 @cli.group()
 def stream():
-    """Stream management commands."""
+    """Manage streaming in Slobs CLI."""
 
 
 @stream.command()
 @click.pass_context
 async def start(ctx: click.Context):
     """Start the stream."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ss = StreamingService(conn)
 
     async def _run():
         model = await ss.get_model()
-        active = model.streaming_status != "offline"
+        active = model.streaming_status != 'offline'
 
         if active:
             conn.close()
-            raise SlobsCliError("Stream is already active.")
+            raise SlobsCliError('Stream is already active.')
 
         await ss.toggle_streaming()
-        click.echo("Stream started.")
+        click.echo('Stream started.')
         conn.close()
 
     try:
@@ -44,20 +45,19 @@ async def start(ctx: click.Context):
 @click.pass_context
 async def stop(ctx: click.Context):
     """Stop the stream."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ss = StreamingService(conn)
 
     async def _run():
         model = await ss.get_model()
-        active = model.streaming_status != "offline"
+        active = model.streaming_status != 'offline'
 
         if not active:
             conn.close()
-            raise SlobsCliError("Stream is already inactive.")
+            raise SlobsCliError('Stream is already inactive.')
 
         await ss.toggle_streaming()
-        click.echo("Stream stopped.")
+        click.echo('Stream stopped.')
         conn.close()
 
     try:
@@ -73,18 +73,17 @@ async def stop(ctx: click.Context):
 @click.pass_context
 async def status(ctx: click.Context):
     """Get the current stream status."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ss = StreamingService(conn)
 
     async def _run():
         model = await ss.get_model()
-        active = model.streaming_status != "offline"
+        active = model.streaming_status != 'offline'
 
         if active:
-            click.echo("Stream is currently active.")
+            click.echo('Stream is currently active.')
         else:
-            click.echo("Stream is currently inactive.")
+            click.echo('Stream is currently inactive.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -96,19 +95,18 @@ async def status(ctx: click.Context):
 @click.pass_context
 async def toggle(ctx: click.Context):
     """Toggle the stream status."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ss = StreamingService(conn)
 
     async def _run():
         model = await ss.get_model()
-        active = model.streaming_status != "offline"
+        active = model.streaming_status != 'offline'
 
         await ss.toggle_streaming()
         if active:
-            click.echo("Stream stopped.")
+            click.echo('Stream stopped.')
         else:
-            click.echo("Stream started.")
+            click.echo('Stream started.')
 
         conn.close()
 

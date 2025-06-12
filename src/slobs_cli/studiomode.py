@@ -1,3 +1,5 @@
+"""module for managing studio mode in Slobs CLI."""
+
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import TransitionsService
@@ -8,25 +10,24 @@ from .errors import SlobsCliError
 
 @cli.group()
 def studiomode():
-    """Studio mode management commands."""
+    """Manage studio mode in Slobs CLI."""
 
 
 @studiomode.command()
 @click.pass_context
 async def enable(ctx: click.Context):
     """Enable studio mode."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ts = TransitionsService(conn)
 
     async def _run():
         model = await ts.get_model()
         if model.studio_mode:
             conn.close()
-            raise SlobsCliError("Studio mode is already enabled.")
+            raise SlobsCliError('Studio mode is already enabled.')
 
         await ts.enable_studio_mode()
-        click.echo("Studio mode enabled successfully.")
+        click.echo('Studio mode enabled successfully.')
         conn.close()
 
     try:
@@ -42,18 +43,17 @@ async def enable(ctx: click.Context):
 @click.pass_context
 async def disable(ctx: click.Context):
     """Disable studio mode."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ts = TransitionsService(conn)
 
     async def _run():
         model = await ts.get_model()
         if not model.studio_mode:
             conn.close()
-            raise SlobsCliError("Studio mode is already disabled.")
+            raise SlobsCliError('Studio mode is already disabled.')
 
         await ts.disable_studio_mode()
-        click.echo("Studio mode disabled successfully.")
+        click.echo('Studio mode disabled successfully.')
         conn.close()
 
     try:
@@ -69,16 +69,15 @@ async def disable(ctx: click.Context):
 @click.pass_context
 async def status(ctx: click.Context):
     """Check the status of studio mode."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ts = TransitionsService(conn)
 
     async def _run():
         model = await ts.get_model()
         if model.studio_mode:
-            click.echo("Studio mode is currently enabled.")
+            click.echo('Studio mode is currently enabled.')
         else:
-            click.echo("Studio mode is currently disabled.")
+            click.echo('Studio mode is currently disabled.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -90,18 +89,17 @@ async def status(ctx: click.Context):
 @click.pass_context
 async def toggle(ctx: click.Context):
     """Toggle studio mode."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ts = TransitionsService(conn)
 
     async def _run():
         model = await ts.get_model()
         if model.studio_mode:
             await ts.disable_studio_mode()
-            click.echo("Studio mode disabled successfully.")
+            click.echo('Studio mode disabled successfully.')
         else:
             await ts.enable_studio_mode()
-            click.echo("Studio mode enabled successfully.")
+            click.echo('Studio mode enabled successfully.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -113,18 +111,17 @@ async def toggle(ctx: click.Context):
 @click.pass_context
 async def force_transition(ctx: click.Context):
     """Force a transition in studio mode."""
-
-    conn = ctx.obj["connection"]
+    conn = ctx.obj['connection']
     ts = TransitionsService(conn)
 
     async def _run():
         model = await ts.get_model()
         if not model.studio_mode:
             conn.close()
-            raise SlobsCliError("Studio mode is not enabled.")
+            raise SlobsCliError('Studio mode is not enabled.')
 
         await ts.execute_studio_mode_transition()
-        click.echo("Forced studio mode transition.")
+        click.echo('Forced studio mode transition.')
         conn.close()
 
     try:

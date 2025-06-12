@@ -1,6 +1,9 @@
+"""pytest configuration for async tests using anyio."""
+
 import pytest
 
 
 @pytest.fixture
 def anyio_backend():
-    return "asyncio"
+    """Return the backend to use for async tests."""
+    return 'asyncio'

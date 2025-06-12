@@ -1,1 +1,3 @@
-__version__ = "0.8.4"
+"""module for package metadata."""
+
+__version__ = '0.8.4'
