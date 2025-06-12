@@ -41,7 +41,8 @@ async def list(ctx: click.Context, id: bool = False):
                 to_append = [click.style(scene.name, fg='blue')]
             if id:
                 to_append.append(scene.id)
-            to_append.append('✅' if scene.id == active_scene.id else '')
+            if scene.id == active_scene.id:
+                to_append.append('✅')
 
             table_data.append(to_append)
 

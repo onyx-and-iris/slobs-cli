@@ -105,11 +105,10 @@ async def toggle(ctx: click.Context):
         model = await ss.get_model()
         active = model.recording_status != 'offline'
 
+        await ss.toggle_recording()
         if active:
-            await ss.toggle_recording()
             click.echo('Recording stopped.')
         else:
-            await ss.toggle_recording()
             click.echo('Recording started.')
 
         conn.close()
