@@ -3,6 +3,7 @@ from anyio import create_task_group
 from pyslobs import TransitionsService
 
 from .cli import cli
+from .errors import SlobsCliError
 
 
 @cli.group()
@@ -22,15 +23,19 @@ async def enable(ctx: click.Context):
         model = await ts.get_model()
         if model.studio_mode:
             conn.close()
-            raise click.Abort(click.style("Studio mode is already enabled.", fg="red"))
+            raise SlobsCliError("Studio mode is already enabled.")
 
         await ts.enable_studio_mode()
         click.echo("Studio mode enabled successfully.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @studiomode.command()
@@ -45,15 +50,19 @@ async def disable(ctx: click.Context):
         model = await ts.get_model()
         if not model.studio_mode:
             conn.close()
-            raise click.Abort(click.style("Studio mode is already disabled.", fg="red"))
+            raise SlobsCliError("Studio mode is already disabled.")
 
         await ts.disable_studio_mode()
         click.echo("Studio mode disabled successfully.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @studiomode.command()
@@ -112,12 +121,16 @@ async def force_transition(ctx: click.Context):
         model = await ts.get_model()
         if not model.studio_mode:
             conn.close()
-            raise click.Abort(click.style("Studio mode is not enabled.", fg="red"))
+            raise SlobsCliError("Studio mode is not enabled.")
 
         await ts.execute_studio_mode_transition()
         click.echo("Forced studio mode transition.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e

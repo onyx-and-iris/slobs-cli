@@ -3,6 +3,7 @@ from anyio import create_task_group
 from pyslobs import StreamingService
 
 from .cli import cli
+from .errors import SlobsCliError
 
 
 @cli.group()
@@ -24,15 +25,19 @@ async def start(ctx: click.Context):
 
         if active:
             conn.close()
-            raise click.Abort(click.style("Replay buffer is already active.", fg="red"))
+            raise SlobsCliError("Replay buffer is already active.")
 
         await ss.start_replay_buffer()
         click.echo("Replay buffer started.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @replaybuffer.command()
@@ -49,17 +54,19 @@ async def stop(ctx: click.Context):
 
         if not active:
             conn.close()
-            raise click.Abort(
-                click.style("Replay buffer is already inactive.", fg="red")
-            )
+            raise SlobsCliError("Replay buffer is already inactive.")
 
         await ss.stop_replay_buffer()
         click.echo("Replay buffer stopped.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @replaybuffer.command()

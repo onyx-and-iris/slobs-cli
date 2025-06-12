@@ -3,6 +3,7 @@ from anyio import create_task_group
 from pyslobs import StreamingService
 
 from .cli import cli
+from .errors import SlobsCliError
 
 
 @cli.group()
@@ -24,16 +25,20 @@ async def start(ctx: click.Context):
 
         if active:
             conn.close()
-            raise click.Abort(click.style("Recording is already active.", fg="red"))
+            raise SlobsCliError("Recording is already active.")
 
         await ss.toggle_recording()
         click.echo("Recording started.")
 
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @record.command()
@@ -50,16 +55,20 @@ async def stop(ctx: click.Context):
 
         if not active:
             conn.close()
-            raise click.Abort(click.style("Recording is already inactive.", fg="red"))
+            raise SlobsCliError("Recording is already inactive.")
 
         await ss.toggle_recording()
         click.echo("Recording stopped.")
 
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @record.command()

@@ -3,6 +3,7 @@ from anyio import create_task_group
 from pyslobs import StreamingService
 
 from .cli import cli
+from .errors import SlobsCliError
 
 
 @cli.group()
@@ -24,15 +25,19 @@ async def start(ctx: click.Context):
 
         if active:
             conn.close()
-            raise click.Abort(click.style("Stream is already active.", fg="red"))
+            raise SlobsCliError("Stream is already active.")
 
         await ss.toggle_streaming()
         click.echo("Stream started.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @stream.command()
@@ -49,15 +54,19 @@ async def stop(ctx: click.Context):
 
         if not active:
             conn.close()
-            raise click.Abort(click.style("Stream is already inactive.", fg="red"))
+            raise SlobsCliError("Stream is already inactive.")
 
         await ss.toggle_streaming()
         click.echo("Stream stopped.")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @stream.command()

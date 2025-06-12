@@ -3,6 +3,7 @@ from anyio import create_task_group
 from pyslobs import AudioService
 
 from .cli import cli
+from .errors import SlobsCliError
 
 
 @cli.group()
@@ -22,18 +23,24 @@ async def list(ctx: click.Context):
         sources = await as_.get_sources()
         if not sources:
             conn.close()
-            click.Abort(click.style("No audio sources found.", fg="red"))
+            click.echo("No audio sources found.")
+            return
 
+        click.echo("Available audio sources:")
         for source in sources:
             model = await source.get_model()
             click.echo(
-                f"Source ID: {source.source_id}, Name: {model.name}, Muted: {model.muted}"
+                f"- {click.style(model.name, fg='blue')} (ID: {model.source_id}, Muted: {click.style('✅', fg='green') if model.muted else click.style('❌', fg='red')})"
             )
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @audio.command()
@@ -51,19 +58,21 @@ async def mute(ctx: click.Context, source_name: str):
             model = await source.get_model()
             if model.name.lower() == source_name.lower():
                 break
-        else:
+        else:  # If no source by the given name was found
             conn.close()
-            raise click.Abort(
-                click.style(f"Source '{source_name}' not found.", fg="red")
-            )
+            raise SlobsCliError(f"Source '{source_name}' not found.")
 
         await source.set_muted(True)
         click.echo(f"Muted audio source: {source_name}")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @audio.command()
@@ -81,19 +90,21 @@ async def unmute(ctx: click.Context, source_name: str):
             model = await source.get_model()
             if model.name.lower() == source_name.lower():
                 break
-        else:
+        else:  # If no source by the given name was found
             conn.close()
-            raise click.Abort(
-                click.style(f"Source '{source_name}' not found.", fg="red")
-            )
+            raise SlobsCliError(f"Source '{source_name}' not found.")
 
         await source.set_muted(False)
         click.echo(f"Unmuted audio source: {source_name}")
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
 
 
 @audio.command()
@@ -118,12 +129,14 @@ async def toggle(ctx: click.Context, source_name: str):
                     click.echo(f"Muted audio source: {source_name}")
                 conn.close()
                 break
-        else:
+        else:  # If no source by the given name was found
             conn.close()
-            raise click.Abort(
-                click.style(f"Source '{source_name}' not found.", fg="red")
-            )
+            raise SlobsCliError(f"Source '{source_name}' not found.")
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
