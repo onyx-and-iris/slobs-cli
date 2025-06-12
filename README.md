@@ -189,6 +189,12 @@ slobs-cli audio unmute "Mic/Aux"
 slobs-cli audio toggle "Mic/Aux"
 ```
 
+-   status: Get the mute status of an audio source by name.
+
+```console
+slobs-cli audio status "Mic/Aux"
+```
+
 #### Replay Buffer
 
 -   start: Start the replay buffer.
