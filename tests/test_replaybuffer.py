@@ -1,5 +1,4 @@
 import anyio
-import asyncclick as click
 import pytest
 from asyncclick.testing import CliRunner
 
@@ -13,19 +12,14 @@ async def test_replaybuffer_start():
     assert result.exit_code == 0
     active = "Replay buffer is currently active." in result.output
 
+    result = await runner.invoke(cli, ["replaybuffer", "start"])
     if not active:
-        result = await runner.invoke(cli, ["replaybuffer", "start"])
         assert result.exit_code == 0
         assert "Replay buffer started" in result.output
-        await anyio.sleep(1)
+        await anyio.sleep(0.2)  # Allow some time for the replay buffer to start
     else:
-        with pytest.raises(ExceptionGroup) as exc_info:
-            result = await runner.invoke(
-                cli, ["replaybuffer", "start"], catch_exceptions=False
-            )
-        assert exc_info.group_contains(
-            click.Abort, match="Replay buffer is already active."
-        )
+        assert result.exit_code != 0
+        assert "Replay buffer is already active." in result.output
 
 
 @pytest.mark.anyio
@@ -35,16 +29,11 @@ async def test_replaybuffer_stop():
     assert result.exit_code == 0
     active = "Replay buffer is currently active." in result.output
 
+    result = await runner.invoke(cli, ["replaybuffer", "stop"])
     if active:
-        result = await runner.invoke(cli, ["replaybuffer", "stop"])
         assert result.exit_code == 0
         assert "Replay buffer stopped" in result.output
-        await anyio.sleep(1)
+        await anyio.sleep(0.2)  # Allow some time for the replay buffer to stop
     else:
-        with pytest.raises(ExceptionGroup) as exc_info:
-            result = await runner.invoke(
-                cli, ["replaybuffer", "stop"], catch_exceptions=False
-            )
-        assert exc_info.group_contains(
-            click.Abort, match="Replay buffer is already inactive."
-        )
+        assert result.exit_code != 0
+        assert "Replay buffer is already inactive." in result.output
