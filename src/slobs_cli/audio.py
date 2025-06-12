@@ -75,10 +75,10 @@ async def mute(ctx: click.Context, source_name: str):
                 break
         else:  # If no source by the given name was found
             conn.close()
-            raise SlobsCliError(f"Source '{source_name}' not found.")
+            raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
         await source.set_muted(True)
-        click.echo(f'Muted audio source: {source_name}')
+        click.echo(f'{source_name} muted successfully.')
         conn.close()
 
     try:
@@ -106,10 +106,10 @@ async def unmute(ctx: click.Context, source_name: str):
                 break
         else:  # If no source by the given name was found
             conn.close()
-            raise SlobsCliError(f"Source '{source_name}' not found.")
+            raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
         await source.set_muted(False)
-        click.echo(f'Unmuted audio source: {source_name}')
+        click.echo(f'{source_name} unmuted successfully.')
         conn.close()
 
     try:
@@ -136,15 +136,46 @@ async def toggle(ctx: click.Context, source_name: str):
             if model.name.lower() == source_name.lower():
                 if model.muted:
                     await source.set_muted(False)
-                    click.echo(f'Unmuted audio source: {source_name}')
+                    click.echo(f'{source_name} unmuted successfully.')
                 else:
                     await source.set_muted(True)
-                    click.echo(f'Muted audio source: {source_name}')
+                    click.echo(f'{source_name} muted successfully.')
                 conn.close()
                 break
         else:  # If no source by the given name was found
             conn.close()
-            raise SlobsCliError(f"Source '{source_name}' not found.")
+            raise SlobsCliError(f'Audio source "{source_name}" not found.')
+
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* SlobsCliError as excgroup:
+        for e in excgroup.exceptions:
+            raise e
+
+
+@audio.command()
+@click.argument('source_name')
+@click.pass_context
+async def status(ctx: click.Context, source_name: str):
+    """Get the mute status of an audio source by name."""
+    conn = ctx.obj['connection']
+    as_ = AudioService(conn)
+
+    async def _run():
+        sources = await as_.get_sources()
+        for source in sources:
+            model = await source.get_model()
+            if model.name.lower() == source_name.lower():
+                click.echo(
+                    f'"{source_name}" is {"muted" if model.muted else "unmuted"}.'
+                )
+                conn.close()
+                return
+        else:
+            conn.close()
+            raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
     try:
         async with create_task_group() as tg:

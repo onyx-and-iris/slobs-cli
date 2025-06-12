@@ -84,7 +84,7 @@ async def current(ctx: click.Context, id: bool = False):
 
 @scene.command()
 @click.option('--id', is_flag=True, help='Include scene IDs in the output.')
-@click.argument('scene_name', type=str)
+@click.argument('scene_name')
 @click.option(
     '--preview',
     is_flag=True,
