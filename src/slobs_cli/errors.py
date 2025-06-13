@@ -1,5 +1,7 @@
 """module for custom exceptions in Slobs CLI."""
 
+import json
+
 import asyncclick as click
 
 
@@ -14,3 +16,31 @@ class SlobsCliError(click.ClickException):
     def show(self):
         """Display the error message in red."""
         click.secho(f'Error: {self.message}', fg='red', err=True)
+
+
+class SlobsCliProtocolError(SlobsCliError):
+    """Converts pyslobs ProtocolError to a SlobsCliProtocolError."""
+
+    def __init__(self, message: str):
+        """Initialize the SlobsCliProtocolError with a message."""
+        protocol_message_to_dict = json.loads(
+            str(message).replace('"', '\\"').replace("'", '"')
+        )
+        super().__init__(
+            protocol_message_to_dict.get('message', 'Unable to parse error message')
+        )
+        self.exit_code = 2
+        self.protocol_code = protocol_message_to_dict.get('code', 'Unknown error code')
+
+    def show(self):
+        """Display the protocol error message in red."""
+        match self.protocol_code:
+            case -32600:
+                click.secho(
+                    'Oops! Looks like we hit a rate limit for this command. Please try again later.',
+                    fg='red',
+                    err=True,
+                )
+            case _:
+                # Fall back to the base error display for unknown protocol codes
+                super().show()

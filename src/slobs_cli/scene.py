@@ -2,11 +2,11 @@
 
 import asyncclick as click
 from anyio import create_task_group
-from pyslobs import ScenesService, TransitionsService
+from pyslobs import ProtocolError, ScenesService, TransitionsService
 from terminaltables3 import AsciiTable
 
 from .cli import cli
-from .errors import SlobsCliError
+from .errors import SlobsCliError, SlobsCliProtocolError
 
 
 @cli.group()
@@ -56,9 +56,14 @@ async def list(ctx: click.Context, id: bool = False):
 
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* ProtocolError as excgroup:
+        raisable = next(iter(excgroup.exceptions))
+        e = SlobsCliProtocolError(str(raisable))
+        raise e
 
 
 @scene.command()
@@ -77,9 +82,14 @@ async def current(ctx: click.Context, id: bool = False):
         )
         conn.close()
 
-    async with create_task_group() as tg:
-        tg.start_soon(conn.background_processing)
-        tg.start_soon(_run)
+    try:
+        async with create_task_group() as tg:
+            tg.start_soon(conn.background_processing)
+            tg.start_soon(_run)
+    except* ProtocolError as excgroup:
+        raisable = next(iter(excgroup.exceptions))
+        e = SlobsCliProtocolError(str(raisable))
+        raise e
 
 
 @scene.command()
@@ -138,12 +148,16 @@ async def switch(
                 break
         else:  # If no scene by the given name was found
             conn.close()
-            raise SlobsCliError(f"Scene '{scene_name}' not found.")
+            raise SlobsCliError(f'Scene "{scene_name}" not found.')
 
     try:
         async with create_task_group() as tg:
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
+    except* ProtocolError as excgroup:
+        p_error = next(iter(excgroup.exceptions))
+        raisable = SlobsCliProtocolError(str(p_error))
+        raise raisable
