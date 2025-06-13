@@ -61,9 +61,9 @@ async def list(ctx: click.Context, id: bool = False):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* ProtocolError as excgroup:
-        raisable = next(iter(excgroup.exceptions))
-        e = SlobsCliProtocolError(str(raisable))
-        raise e
+        p_error = next(iter(excgroup.exceptions))
+        raisable = SlobsCliProtocolError(str(p_error))
+        raise raisable
 
 
 @scene.command()
@@ -87,9 +87,9 @@ async def current(ctx: click.Context, id: bool = False):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* ProtocolError as excgroup:
-        raisable = next(iter(excgroup.exceptions))
-        e = SlobsCliProtocolError(str(raisable))
-        raise e
+        p_error = next(iter(excgroup.exceptions))
+        raisable = SlobsCliProtocolError(str(p_error))
+        raise raisable
 
 
 @scene.command()
