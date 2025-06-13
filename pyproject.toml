@@ -28,12 +28,13 @@ _.env_file = ".env"
 
 cli.cmd = "slobs-cli {args}"
 
-pre_test.cmd = "python tests/setup.py"
-test.cmd = "pytest {args}"
-post_test.cmd = "python tests/teardown.py"
+_setup.cmd = "python tests/setup.py"
+_teardown.cmd = "python tests/teardown.py"
+test.composite = ["_setup", "pytest {args}", "_teardown"]
+test.keep_going = true
 
 fmt.cmd = "ruff format {args}"
-lint.cmd = "ruff check {args}"
+post_fmt.cmd = "ruff check {args}"
 
 [dependency-groups]
 dev = [
