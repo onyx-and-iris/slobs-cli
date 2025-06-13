@@ -35,8 +35,8 @@ async def enable(ctx: click.Context):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @studiomode.command()
@@ -61,8 +61,8 @@ async def disable(ctx: click.Context):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @studiomode.command()
@@ -129,5 +129,5 @@ async def force_transition(ctx: click.Context):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable

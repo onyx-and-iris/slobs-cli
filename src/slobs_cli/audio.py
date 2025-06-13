@@ -86,8 +86,8 @@ async def mute(ctx: click.Context, source_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @audio.command()
@@ -117,8 +117,8 @@ async def unmute(ctx: click.Context, source_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @audio.command()
@@ -151,8 +151,8 @@ async def toggle(ctx: click.Context, source_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @audio.command()
@@ -182,5 +182,5 @@ async def status(ctx: click.Context, source_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable

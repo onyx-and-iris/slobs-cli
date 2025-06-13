@@ -38,8 +38,8 @@ async def start(ctx: click.Context):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @record.command()
@@ -67,8 +67,8 @@ async def stop(ctx: click.Context):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @record.command()

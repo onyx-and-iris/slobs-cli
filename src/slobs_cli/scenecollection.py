@@ -88,8 +88,8 @@ async def load(ctx: click.Context, scenecollection_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @scenecollection.command()
@@ -136,8 +136,8 @@ async def delete(ctx: click.Context, scenecollection_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
 
 
 @scenecollection.command()
@@ -169,5 +169,5 @@ async def rename(ctx: click.Context, scenecollection_name: str, new_name: str):
             tg.start_soon(conn.background_processing)
             tg.start_soon(_run)
     except* SlobsCliError as excgroup:
-        for e in excgroup.exceptions:
-            raise e
+        raisable = next(iter(excgroup.exceptions))
+        raise raisable
