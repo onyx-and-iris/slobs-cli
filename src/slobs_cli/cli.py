@@ -11,7 +11,7 @@ from .__about__ import __version__ as version
 @click.option(
     '-d',
     '--domain',
-    default='127.0.0.1',
+    default='localhost',
     envvar='SLOBS_DOMAIN',
     show_default=True,
     show_envvar=True,

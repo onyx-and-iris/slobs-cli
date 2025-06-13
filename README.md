@@ -51,7 +51,7 @@ The CLI should now be discoverable as `slobs-cli`
 Pass `--domain`, `--port` and `--token` as flags on the root command, for example:
 
 ```console
-slobs-cli --domain 127.0.0.1 --port 59650 --token <API token> --help
+slobs-cli --domain localhost --port 59650 --token <API token> --help
 ```
 
 #### Environment Variables
@@ -59,7 +59,7 @@ slobs-cli --domain 127.0.0.1 --port 59650 --token <API token> --help
 Load the following values from your environment:
 
 ```env
-SLOBS_DOMAIN=127.0.0.1
+SLOBS_DOMAIN=localhost
 SLOBS_PORT=59650
 SLOBS_TOKEN=<API Token>
 ```
