@@ -173,7 +173,7 @@ async def status(ctx: click.Context, source_name: str):
                 )
                 conn.close()
                 return
-        else:
+        else:  # If no source by the given name was found
             conn.close()
             raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
