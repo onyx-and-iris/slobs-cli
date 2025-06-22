@@ -1,14 +1,10 @@
 """module for console output handling."""
 
-import os
-
 import asyncclick as click
 from rich.console import Console
 
 out = Console()
-err = Console(
-    stderr=True, style='bold red' if os.getenv('NO_COLOR', '') != '' else 'none'
-)
+err = Console(stderr=True, style='bold red')
 
 
 def highlight(ctx: click.Context, text: str) -> str:
