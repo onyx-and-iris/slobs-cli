@@ -9,7 +9,13 @@ import os
 
 import anyio
 from anyio import create_task_group
-from pyslobs import ConnectionConfig, ScenesService, SlobsConnection, StreamingService
+from pyslobs import (
+    ConnectionConfig,
+    ScenesService,
+    SlobsConnection,
+    StreamingService,
+    TransitionsService,
+)
 
 
 async def cleanup(conn: SlobsConnection):
@@ -28,6 +34,11 @@ async def cleanup(conn: SlobsConnection):
         await ss.stop_replay_buffer()
     if model.recording_status != 'offline':
         await ss.toggle_recording()
+
+    ts = TransitionsService(conn)
+    model = await ts.get_model()
+    if model.studio_mode:
+        await ts.disable_studio_mode()
 
     conn.close()
 
