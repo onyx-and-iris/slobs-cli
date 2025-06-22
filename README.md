@@ -293,6 +293,34 @@ slobs-cli scenecollection load "ExistingCollection"
 slobs-cli scenecollection rename "ExistingCollection" "NewName"
 ```
 
+## Style
+
+By default styling is disabled but you may enable it with:
+
+-   --style/-s: Style used in output.
+    -  SLOBS_STYLE
+-   --no-border/-b: Disable table border styling in output.
+    -  SLOBS_STYLE_NO_BORDER
+
+Available styles:
+
+- red
+- magenta
+- purple
+- blue
+- cyan
+- green
+- yellow
+- orange
+- white
+- grey
+- navy
+- black
+
+```console
+slobs-cli --style=cyan --no-border scene list
+```
+
 ## Special Thanks
 
 -   [Julian-0](https://github.com/Julian-O) For writing the [PySLOBS wrapper](https://github.com/Julian-O/PySLOBS) on which this CLI depends.
