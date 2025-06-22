@@ -8,6 +8,15 @@ from . import styles
 from .__about__ import __version__ as version
 
 
+def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> str:
+    """Validate the style option."""
+    if value not in styles.registry:
+        raise click.BadParameter(
+            f"Invalid style '{value}'. Available styles: {', '.join(styles.registry.keys())}"
+        )
+    return value
+
+
 @click.group()
 @click.option(
     '-d',
@@ -43,6 +52,7 @@ from .__about__ import __version__ as version
     show_default=True,
     show_envvar=True,
     help='The style to use for output.',
+    callback=validate_style,
 )
 @click.option(
     '-b',

@@ -3,15 +3,15 @@
 import os
 from dataclasses import dataclass
 
-_registry = {}
+registry = {}
 
 
 def register_style(cls):
     """Register a style class."""
     key = cls.__name__.lower()
-    if key in _registry:
+    if key in registry:
         raise ValueError(f'Style {key} is already registered.')
-    _registry[key] = cls
+    registry[key] = cls
     return cls
 
 
@@ -19,12 +19,12 @@ def register_style(cls):
 class Style:
     """Base class for styles."""
 
-    name: str = 'no_colour'
-    border: str = 'none'
-    header: str = 'none'
-    cell: str = 'none'
-    highlight: str = 'none'
-    warning: str = 'none'
+    name: str
+    border: str
+    header: str
+    cell: str
+    highlight: str
+    warning: str
     no_border: bool = False
 
     def __post_init__(self):
@@ -32,6 +32,24 @@ class Style:
         self.name = self.name.lower()
         if self.no_border:
             self.border = None
+
+
+@register_style
+@dataclass
+class Disabled(Style):
+    """Disabled style."""
+
+    name: str = 'disabled'
+    header: str = ''
+    border: str = 'none'
+    cell: str = 'none'
+    highlight: str = 'none'
+    warning: str = 'none'
+
+    def __post__init__(self):
+        """Post-initialization to set default values."""
+        super().__post_init__()
+        os.environ['NO_COLOR'] = '1'
 
 
 @register_style
@@ -192,8 +210,4 @@ class Black(Style):
 
 def request_style_obj(style_name: str, no_border: bool) -> Style:
     """Request a style object by name."""
-    key = style_name.lower()
-    if key not in _registry:
-        os.environ['NO_COLOR'] = '1'  # Disable colour output
-        return Style(no_border=no_border)
-    return _registry[key](no_border=no_border)
+    return registry[style_name.lower()](no_border=no_border)
