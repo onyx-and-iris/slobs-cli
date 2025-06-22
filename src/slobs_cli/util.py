@@ -10,6 +10,10 @@ def check_mark(ctx: click.Context, value: bool, empty_if_false: bool = False) ->
     if empty_if_false and not value:
         return ''
 
-    if os.getenv('NO_COLOR', '') != '' or ctx.obj['style'].name == 'no_colour':
+    # rich gracefully handles the absence of colour throughout the rest of the application,
+    # but here we must handle it manually.
+    # If NO_COLOR is set, we return plain text symbols.
+    # Otherwise, we return coloured symbols.
+    if os.getenv('NO_COLOR', '') != '':
         return '✓' if value else '✗'
     return '✅' if value else '❌'

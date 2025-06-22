@@ -20,10 +20,11 @@ class Style:
     """Base class for styles."""
 
     name: str = 'no_colour'
-    border: str | None = None
-    header: str | None = None
-    cell: str | None = None
-    highlight: str | None = None
+    border: str = 'none'
+    header: str = 'none'
+    cell: str = 'none'
+    highlight: str = 'none'
+    warning: str = 'none'
     no_border: bool = False
 
     def __post_init__(self):
@@ -43,6 +44,7 @@ class Red(Style):
     border: str = 'dark_red'
     cell: str = 'red'
     highlight: str = 'red3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -55,6 +57,7 @@ class Magenta(Style):
     border: str = 'dark_magenta'
     cell: str = 'magenta'
     highlight: str = 'magenta3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -67,6 +70,7 @@ class Purple(Style):
     border: str = 'purple'
     cell: str = 'medium_orchid'
     highlight: str = 'medium_orchid'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -79,6 +83,7 @@ class Blue(Style):
     border: str = 'dark_blue'
     cell: str = 'blue'
     highlight: str = 'blue3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -91,6 +96,7 @@ class Cyan(Style):
     border: str = 'dark_cyan'
     cell: str = 'cyan'
     highlight: str = 'cyan3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -103,6 +109,7 @@ class Green(Style):
     border: str = 'dark_green'
     cell: str = 'green'
     highlight: str = 'green3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -115,6 +122,7 @@ class Yellow(Style):
     border: str = 'yellow3'
     cell: str = 'wheat1'
     highlight: str = 'yellow3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -127,6 +135,7 @@ class Orange(Style):
     border: str = 'dark_orange'
     cell: str = 'orange'
     highlight: str = 'orange3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -139,6 +148,7 @@ class White(Style):
     border: str = 'white'
     cell: str = 'white'
     highlight: str = 'white'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -151,6 +161,7 @@ class Grey(Style):
     border: str = 'grey50'
     cell: str = 'grey70'
     highlight: str = 'grey90'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -163,6 +174,7 @@ class Navy(Style):
     border: str = 'deep_sky_blue4'
     cell: str = 'light_sky_blue3'
     highlight: str = 'light_sky_blue3'
+    warning: str = 'magenta'
 
 
 @register_style
@@ -175,6 +187,7 @@ class Black(Style):
     border: str = 'black'
     cell: str = 'grey30'
     highlight: str = 'grey30'
+    warning: str = 'magenta'
 
 
 def request_style_obj(style_name: str, no_border: bool) -> Style:
