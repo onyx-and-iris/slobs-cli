@@ -4,6 +4,8 @@ import json
 
 import asyncclick as click
 
+from . import console
+
 
 class SlobsCliError(click.ClickException):
     """Base class for all Slobs CLI errors."""
@@ -14,8 +16,8 @@ class SlobsCliError(click.ClickException):
         self.exit_code = 1
 
     def show(self):
-        """Display the error message in red."""
-        click.secho(f'Error: {self.message}', fg='red', err=True)
+        """Display the error message in red and write to stderr."""
+        console.err.print(f'Error: {self.message}')
 
 
 class SlobsCliProtocolError(SlobsCliError):
@@ -36,10 +38,8 @@ class SlobsCliProtocolError(SlobsCliError):
         """Display the protocol error message in red."""
         match self.protocol_code:
             case -32600:
-                click.secho(
-                    'Oops! Looks like we hit a rate limit for this command. Please try again later.',
-                    fg='red',
-                    err=True,
+                console.err.print(
+                    'Oops! Looks like we hit a rate limit for this command. Please try again later.'
                 )
             case _:
                 # Fall back to the base error display for unknown protocol codes

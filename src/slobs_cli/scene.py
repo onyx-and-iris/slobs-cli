@@ -3,8 +3,10 @@
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import ProtocolError, ScenesService, TransitionsService
-from terminaltables3 import AsciiTable
+from rich.table import Table
+from rich.text import Text
 
+from . import console, util
 from .cli import cli
 from .errors import SlobsCliError, SlobsCliProtocolError
 
@@ -25,34 +27,45 @@ async def list(ctx: click.Context, id: bool = False):
     async def _run():
         scenes = await ss.get_scenes()
         if not scenes:
-            click.echo('No scenes found.')
+            console.out.print('No scenes found.')
             conn.close()
             return
 
         active_scene = await ss.active_scene()
 
-        table_data = [
-            ['Scene Name', 'ID', 'Active'] if id else ['Scene Name', 'Active']
-        ]
+        style = ctx.obj['style']
+        table = Table(
+            show_header=True,
+            header_style=style.header,
+            border_style=style.border,
+        )
+
+        if id:
+            columns = [
+                ('Scene Name', 'left'),
+                ('Active', 'center'),
+                ('ID', 'left'),
+            ]
+        else:
+            columns = [
+                ('Scene Name', 'left'),
+                ('Active', 'center'),
+            ]
+
+        for col_name, col_justify in columns:
+            table.add_column(Text(col_name, justify='center'), justify=col_justify)
+
         for scene in scenes:
-            if scene.id == active_scene.id:
-                to_append = [click.style(scene.name, fg='green')]
-            else:
-                to_append = [click.style(scene.name, fg='blue')]
+            to_append = [Text(scene.name, style=style.cell)]
+            to_append.append(
+                util.check_mark(ctx, scene.id == active_scene.id, empty_if_false=True)
+            )
             if id:
-                to_append.append(scene.id)
-            if scene.id == active_scene.id:
-                to_append.append('✅')
+                to_append.append(Text(scene.id, style=style.cell))
 
-            table_data.append(to_append)
+            table.add_row(*to_append)
 
-        table = AsciiTable(table_data)
-        table.justify_columns = {
-            0: 'left',
-            1: 'left' if id else 'center',
-            2: 'center' if id else None,
-        }
-        click.echo(table.table)
+        console.out.print(table)
 
         conn.close()
 
@@ -76,9 +89,9 @@ async def current(ctx: click.Context, id: bool = False):
 
     async def _run():
         active_scene = await ss.active_scene()
-        click.echo(
-            f'Current active scene: {click.style(active_scene.name, fg="green")} '
-            f'{f"(ID: {active_scene.id})" if id else ""}'
+        console.out.print(
+            f'Current active scene: {console.highlight(ctx, active_scene.name)} '
+            f'{f"(ID: {console.highlight(ctx, active_scene.id)})" if id else ""}'
         )
         conn.close()
 
@@ -118,18 +131,21 @@ async def switch(
                 if model.studio_mode:
                     await ss.make_scene_active(scene.id)
                     if preview:
-                        click.echo(
-                            f'Switched to preview scene: {click.style(scene.name, fg="blue")} '
-                            f'{f"(ID: {scene.id})." if id else ""}'
+                        console.out.print(
+                            f'Switched to preview scene: {console.highlight(ctx, scene.name)} '
+                            f'{f"(ID: {console.highlight(ctx, scene.id)})" if id else ""}'
                         )
                     else:
-                        click.echo(
-                            f'Switched to scene: {click.style(scene.name, fg="blue")} '
-                            f'{f"(ID: {scene.id})." if id else ""}'
+                        console.out.print(
+                            f'Switched to scene: {console.highlight(ctx, scene.name)} '
+                            f'{f"(ID: {console.highlight(ctx, scene.id)})" if id else ""}'
                         )
-                        await ts.execute_studio_mode_transition()
-                        click.echo(
-                            'Executed studio mode transition to make the scene active.'
+                        console.err.print(
+                            console.warning(
+                                ctx,
+                                'Warning: You are in studio mode. The scene switch is not active yet.\n'
+                                'use `slobs-cli studiomode force-transition` to activate the scene switch.',
+                            )
                         )
                 else:
                     if preview:
@@ -139,9 +155,9 @@ async def switch(
                         )
 
                     await ss.make_scene_active(scene.id)
-                    click.echo(
-                        f'Switched to scene: {click.style(scene.name, fg="blue")} '
-                        f'{f"(ID: {scene.id})." if id else ""}'
+                    console.out.print(
+                        f'Switched to scene: {console.highlight(ctx, scene.name)} '
+                        f'{f"(ID: {console.highlight(ctx, scene.id)})" if id else ""}'
                     )
 
                 conn.close()

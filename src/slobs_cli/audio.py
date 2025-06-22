@@ -3,8 +3,10 @@
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import AudioService
-from terminaltables3 import AsciiTable
+from rich.table import Table
+from rich.text import Text
 
+from . import console, util
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -25,32 +27,40 @@ async def list(ctx: click.Context, id: bool = False):
     async def _run():
         sources = await as_.get_sources()
         if not sources:
-            click.echo('No audio sources found.')
+            console.out.print('No audio sources found.')
             conn.close()
             return
 
-        table_data = [
-            ['Audio Device Name', 'ID', 'Muted']
-            if id
-            else ['Audio Device Name', 'Muted']
-        ]
+        style = ctx.obj['style']
+        table = Table(
+            show_header=True, header_style=style.header, border_style=style.border
+        )
+
+        if id:
+            columns = [
+                ('Audio Source Name', 'left'),
+                ('Muted', 'center'),
+                ('ID', 'left'),
+            ]
+        else:
+            columns = [
+                ('Audio Source Name', 'left'),
+                ('Muted', 'center'),
+            ]
+        for col_name, col_justify in columns:
+            table.add_column(Text(col_name, justify='center'), justify=col_justify)
+
         for source in sources:
             model = await source.get_model()
 
-            to_append = [click.style(model.name, fg='blue')]
+            to_append = [Text(model.name, style=style.cell)]
+            to_append.append(util.check_mark(ctx, model.muted))
             if id:
-                to_append.append(model.source_id)
-            to_append.append('✅' if model.muted else '❌')
+                to_append.append(Text(model.source_id, style=style.cell))
 
-            table_data.append(to_append)
+            table.add_row(*to_append)
 
-        table = AsciiTable(table_data)
-        table.justify_columns = {
-            0: 'left',
-            1: 'left' if id else 'center',
-            2: 'center' if id else None,
-        }
-        click.echo(table.table)
+        console.out.print(table)
 
         conn.close()
 
@@ -78,7 +88,7 @@ async def mute(ctx: click.Context, source_name: str):
             raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
         await source.set_muted(True)
-        click.echo(f'{source_name} muted successfully.')
+        console.out.print(f'{console.highlight(ctx, source_name)} muted successfully.')
         conn.close()
 
     try:
@@ -109,7 +119,9 @@ async def unmute(ctx: click.Context, source_name: str):
             raise SlobsCliError(f'Audio source "{source_name}" not found.')
 
         await source.set_muted(False)
-        click.echo(f'{source_name} unmuted successfully.')
+        console.out.print(
+            f'{console.highlight(ctx, source_name)} unmuted successfully.'
+        )
         conn.close()
 
     try:
@@ -136,10 +148,14 @@ async def toggle(ctx: click.Context, source_name: str):
             if model.name.lower() == source_name.lower():
                 if model.muted:
                     await source.set_muted(False)
-                    click.echo(f'{source_name} unmuted successfully.')
+                    console.out.print(
+                        f'{console.highlight(ctx, source_name)} unmuted successfully.'
+                    )
                 else:
                     await source.set_muted(True)
-                    click.echo(f'{source_name} muted successfully.')
+                    console.out.print(
+                        f'{console.highlight(ctx, source_name)} muted successfully.'
+                    )
                 conn.close()
                 break
         else:  # If no source by the given name was found
@@ -168,8 +184,8 @@ async def status(ctx: click.Context, source_name: str):
         for source in sources:
             model = await source.get_model()
             if model.name.lower() == source_name.lower():
-                click.echo(
-                    f'"{source_name}" is {"muted" if model.muted else "unmuted"}.'
+                console.out.print(
+                    f'{console.highlight(ctx, source_name)} is {"muted" if model.muted else "unmuted"}.'
                 )
                 conn.close()
                 return

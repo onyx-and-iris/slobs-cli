@@ -4,6 +4,7 @@ import asyncclick as click
 from anyio import create_task_group
 from pyslobs import StreamingService
 
+from . import console
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -29,7 +30,7 @@ async def start(ctx: click.Context):
             raise SlobsCliError('Stream is already active.')
 
         await ss.toggle_streaming()
-        click.echo('Stream started.')
+        console.out.print('Stream started.')
         conn.close()
 
     try:
@@ -57,7 +58,7 @@ async def stop(ctx: click.Context):
             raise SlobsCliError('Stream is already inactive.')
 
         await ss.toggle_streaming()
-        click.echo('Stream stopped.')
+        console.out.print('Stream stopped.')
         conn.close()
 
     try:
@@ -81,9 +82,9 @@ async def status(ctx: click.Context):
         active = model.streaming_status != 'offline'
 
         if active:
-            click.echo('Stream is currently active.')
+            console.out.print('Stream is currently active.')
         else:
-            click.echo('Stream is currently inactive.')
+            console.out.print('Stream is currently inactive.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -104,9 +105,9 @@ async def toggle(ctx: click.Context):
 
         await ss.toggle_streaming()
         if active:
-            click.echo('Stream stopped.')
+            console.out.print('Stream stopped.')
         else:
-            click.echo('Stream started.')
+            console.out.print('Stream started.')
 
         conn.close()
 

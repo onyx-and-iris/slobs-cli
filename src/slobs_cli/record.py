@@ -4,6 +4,7 @@ import asyncclick as click
 from anyio import create_task_group
 from pyslobs import StreamingService
 
+from . import console
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -29,7 +30,7 @@ async def start(ctx: click.Context):
             raise SlobsCliError('Recording is already active.')
 
         await ss.toggle_recording()
-        click.echo('Recording started.')
+        console.out.print('Recording started.')
 
         conn.close()
 
@@ -58,7 +59,7 @@ async def stop(ctx: click.Context):
             raise SlobsCliError('Recording is already inactive.')
 
         await ss.toggle_recording()
-        click.echo('Recording stopped.')
+        console.out.print('Recording stopped.')
 
         conn.close()
 
@@ -83,9 +84,9 @@ async def status(ctx: click.Context):
         active = model.recording_status != 'offline'
 
         if active:
-            click.echo('Recording is currently active.')
+            console.out.print('Recording is currently active.')
         else:
-            click.echo('Recording is currently inactive.')
+            console.out.print('Recording is currently inactive.')
 
         conn.close()
 
@@ -107,9 +108,9 @@ async def toggle(ctx: click.Context):
 
         await ss.toggle_recording()
         if active:
-            click.echo('Recording stopped.')
+            console.out.print('Recording stopped.')
         else:
-            click.echo('Recording started.')
+            console.out.print('Recording started.')
 
         conn.close()
 

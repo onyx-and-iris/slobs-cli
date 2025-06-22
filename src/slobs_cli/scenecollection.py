@@ -3,8 +3,10 @@
 import asyncclick as click
 from anyio import create_task_group
 from pyslobs import ISceneCollectionCreateOptions, SceneCollectionsService
-from terminaltables3 import AsciiTable
+from rich.table import Table
+from rich.text import Text
 
+from . import console, util
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -25,35 +27,46 @@ async def list(ctx: click.Context, id: bool):
     async def _run():
         collections = await scs.collections()
         if not collections:
-            click.echo('No scene collections found.')
+            console.out.print('No scene collections found.')
             conn.close()
             return
 
         active_collection = await scs.active_collection()
 
-        table_data = [
-            ['Scene Collection Name', 'ID', 'Active']
-            if id
-            else ['Scene Collection Name', 'Active']
-        ]
-        for collection in collections:
-            if collection.id == active_collection.id:
-                to_append = [click.style(collection.name, fg='green')]
-            else:
-                to_append = [click.style(collection.name, fg='blue')]
-            if id:
-                to_append.append(collection.id)
-            if collection.id == active_collection.id:
-                to_append.append('✅')
-            table_data.append(to_append)
+        style = ctx.obj['style']
+        table = Table(
+            show_header=True,
+            header_style=style.header,
+            border_style=style.border,
+        )
 
-        table = AsciiTable(table_data)
-        table.justify_columns = {
-            0: 'left',
-            1: 'left' if id else 'center',
-            2: 'center' if id else None,
-        }
-        click.echo(table.table)
+        if id:
+            columns = [
+                ('Scene Collection Name', 'left'),
+                ('Active', 'center'),
+                ('ID', 'left'),
+            ]
+        else:
+            columns = [
+                ('Scene Collection Name', 'left'),
+                ('Active', 'center'),
+            ]
+
+        for col_name, col_justify in columns:
+            table.add_column(Text(col_name, justify='center'), justify=col_justify)
+
+        for collection in collections:
+            to_append = [Text(collection.name, style=style.cell)]
+            to_append.append(
+                util.check_mark(
+                    ctx, collection.id == active_collection.id, empty_if_false=True
+                )
+            )
+            if id:
+                to_append.append(Text(collection.id, style=style.cell))
+            table.add_row(*to_append)
+
+        console.out.print(table)
 
         conn.close()
 
@@ -80,7 +93,9 @@ async def load(ctx: click.Context, scenecollection_name: str):
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
         await scs.load(collection.id)
-        click.echo(f'Scene collection "{scenecollection_name}" loaded successfully.')
+        console.out.print(
+            f'Scene collection {console.highlight(scenecollection_name)} loaded successfully.'
+        )
         conn.close()
 
     try:
@@ -102,7 +117,9 @@ async def create(ctx: click.Context, scenecollection_name: str):
 
     async def _run():
         await scs.create(ISceneCollectionCreateOptions(scenecollection_name))
-        click.echo(f'Scene collection "{scenecollection_name}" created successfully.')
+        console.out.print(
+            f'Scene collection {console.highlight(scenecollection_name)} created successfully.'
+        )
         conn.close()
 
     async with create_task_group() as tg:
@@ -128,7 +145,9 @@ async def delete(ctx: click.Context, scenecollection_name: str):
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
         await scs.delete(collection.id)
-        click.echo(f'Scene collection "{scenecollection_name}" deleted successfully.')
+        console.out.print(
+            f'Scene collection {console.highlight(scenecollection_name)} deleted successfully.'
+        )
         conn.close()
 
     try:
@@ -159,8 +178,8 @@ async def rename(ctx: click.Context, scenecollection_name: str, new_name: str):
             raise SlobsCliError(f'Scene collection "{scenecollection_name}" not found.')
 
         await scs.rename(new_name, collection.id)
-        click.echo(
-            f'Scene collection "{scenecollection_name}" renamed to "{new_name}".'
+        console.out.print(
+            f'Scene collection {console.highlight(scenecollection_name)} renamed to {console.highlight(new_name)}.'
         )
         conn.close()
 

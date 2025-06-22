@@ -4,6 +4,7 @@ import asyncclick as click
 from anyio import create_task_group
 from pyslobs import StreamingService
 
+from . import console
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -29,7 +30,7 @@ async def start(ctx: click.Context):
             raise SlobsCliError('Replay buffer is already active.')
 
         await ss.start_replay_buffer()
-        click.echo('Replay buffer started.')
+        console.out.print('Replay buffer started.')
         conn.close()
 
     try:
@@ -57,7 +58,7 @@ async def stop(ctx: click.Context):
             raise SlobsCliError('Replay buffer is already inactive.')
 
         await ss.stop_replay_buffer()
-        click.echo('Replay buffer stopped.')
+        console.out.print('Replay buffer stopped.')
         conn.close()
 
     try:
@@ -80,9 +81,9 @@ async def status(ctx: click.Context):
         model = await ss.get_model()
         active = model.replay_buffer_status != 'offline'
         if active:
-            click.echo('Replay buffer is currently active.')
+            console.out.print('Replay buffer is currently active.')
         else:
-            click.echo('Replay buffer is currently inactive.')
+            console.out.print('Replay buffer is currently inactive.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -99,7 +100,7 @@ async def save(ctx: click.Context):
 
     async def _run():
         await ss.save_replay()
-        click.echo('Replay buffer saved.')
+        console.out.print('Replay buffer saved.')
         conn.close()
 
     async with create_task_group() as tg:

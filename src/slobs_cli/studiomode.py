@@ -4,6 +4,7 @@ import asyncclick as click
 from anyio import create_task_group
 from pyslobs import TransitionsService
 
+from . import console
 from .cli import cli
 from .errors import SlobsCliError
 
@@ -27,7 +28,7 @@ async def enable(ctx: click.Context):
             raise SlobsCliError('Studio mode is already enabled.')
 
         await ts.enable_studio_mode()
-        click.echo('Studio mode enabled successfully.')
+        console.out.print('Studio mode enabled successfully.')
         conn.close()
 
     try:
@@ -53,7 +54,7 @@ async def disable(ctx: click.Context):
             raise SlobsCliError('Studio mode is already disabled.')
 
         await ts.disable_studio_mode()
-        click.echo('Studio mode disabled successfully.')
+        console.out.print('Studio mode disabled successfully.')
         conn.close()
 
     try:
@@ -75,9 +76,9 @@ async def status(ctx: click.Context):
     async def _run():
         model = await ts.get_model()
         if model.studio_mode:
-            click.echo('Studio mode is currently enabled.')
+            console.out.print('Studio mode is currently enabled.')
         else:
-            click.echo('Studio mode is currently disabled.')
+            console.out.print('Studio mode is currently disabled.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -96,10 +97,10 @@ async def toggle(ctx: click.Context):
         model = await ts.get_model()
         if model.studio_mode:
             await ts.disable_studio_mode()
-            click.echo('Studio mode disabled successfully.')
+            console.out.print('Studio mode disabled successfully.')
         else:
             await ts.enable_studio_mode()
-            click.echo('Studio mode enabled successfully.')
+            console.out.print('Studio mode enabled successfully.')
         conn.close()
 
     async with create_task_group() as tg:
@@ -121,7 +122,7 @@ async def force_transition(ctx: click.Context):
             raise SlobsCliError('Studio mode is not enabled.')
 
         await ts.execute_studio_mode_transition()
-        click.echo('Forced studio mode transition.')
+        console.out.print('Forced studio mode transition.')
         conn.close()
 
     try:
