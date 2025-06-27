@@ -93,6 +93,13 @@ Optionally you may disable the border colouring with the --no-border flag:
 slobs-cli --style="yellow' --no-border audio list
 ```
 
+Or with environment variables:
+
+```env
+SLOBS_STYLE=yellow
+SLOBS_STYLE_NO_BORDER=1
+```
+
 ## Commands
 
 #### Scene
