@@ -14,6 +14,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Style](#style)
 - [Commands](#commands)
 - [License](#license)
 
@@ -67,6 +68,30 @@ SLOBS_TOKEN=<API Token>
 Flags can be used to override environment variables.
 
 [sl-desktop]: https://streamlabs.com/streamlabs-live-streaming-software?srsltid=AfmBOopnswGBgEyvVSi2DIc_vsGovKn2HQZyLw1Cg6LEo51OJhONXnAX
+
+## Style
+
+Styling is opt-in, by default you will get a colourless output:
+
+![colourless](./img/colourless.png)
+
+You may enable styling with the --style/-s flag:
+
+```console
+slobs-cli --style="yellow" audio list
+```
+
+Available styles: _red, magenta, purple, blue, cyan, green, yellow, orange, white, grey, navy, black_
+
+![coloured](./img/coloured-border.png)
+
+Optionally you may disable the border colouring with the --no-border flag:
+
+![coloured-no-border](./img/coloured-no-border.png)
+
+```console
+slobs-cli --style="yellow' --no-border audio list
+```
 
 ## Commands
 
@@ -293,38 +318,10 @@ slobs-cli scenecollection load "ExistingCollection"
 slobs-cli scenecollection rename "ExistingCollection" "NewName"
 ```
 
-## Style
-
-By default styling is disabled but you may enable it with:
-
--   --style/-s: Style used in output.
-    -  SLOBS_STYLE
--   --no-border/-b: Disable table border styling in output.
-    -  SLOBS_STYLE_NO_BORDER
-
-Available styles:
-
-- red
-- magenta
-- purple
-- blue
-- cyan
-- green
-- yellow
-- orange
-- white
-- grey
-- navy
-- black
-
-```console
-slobs-cli --style=cyan --no-border scene list
-```
-
 ## Special Thanks
 
 -   [Julian-0](https://github.com/Julian-O) For writing the [PySLOBS wrapper](https://github.com/Julian-O/PySLOBS) on which this CLI depends.
 
 ## License
 
-`slobs-cli` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`slobs-cli` is distributed under the terms of the [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) license.
