@@ -97,7 +97,7 @@ Or with environment variables:
 
 ```env
 SLOBS_STYLE=yellow
-SLOBS_STYLE_NO_BORDER=1
+SLOBS_STYLE_NO_BORDER=true
 ```
 
 ## Commands
