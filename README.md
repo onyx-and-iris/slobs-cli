@@ -90,7 +90,7 @@ Optionally you may disable border colouring with the --no-border flag:
 ![coloured-no-border](./img/coloured-no-border.png)
 
 ```console
-slobs-cli --style="yellow' --no-border audio list
+slobs-cli --style="yellow" --no-border audio list
 ```
 
 Or with environment variables:
