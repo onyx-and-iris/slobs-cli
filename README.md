@@ -85,7 +85,7 @@ Available styles: _red, magenta, purple, blue, cyan, green, yellow, orange, whit
 
 ![coloured](./img/coloured-border.png)
 
-Optionally you may disable the border colouring with the --no-border flag:
+Optionally you may disable border colouring with the --no-border flag:
 
 ![coloured-no-border](./img/coloured-no-border.png)
 
