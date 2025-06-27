@@ -52,8 +52,8 @@ async def list(ctx: click.Context, id: bool = False):
                 ('Active', 'center'),
             ]
 
-        for col_name, col_justify in columns:
-            table.add_column(Text(col_name, justify='center'), justify=col_justify)
+        for heading, justify in columns:
+            table.add_column(Text(heading, justify='center'), justify=justify)
 
         for scene in scenes:
             to_append = [Text(scene.name, style=style.cell)]

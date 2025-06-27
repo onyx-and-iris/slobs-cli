@@ -17,7 +17,12 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     return value
 
 
-@click.group()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+@click.group(
+    context_settings=CONTEXT_SETTINGS,
+)
 @click.option(
     '-d',
     '--domain',
@@ -25,7 +30,7 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     envvar='SLOBS_DOMAIN',
     show_default=True,
     show_envvar=True,
-    help='The domain of the SLOBS server.',
+    help='\b\nStreamlabs Desktop WebSocket domain or IP address.\t',
 )
 @click.option(
     '-p',
@@ -34,7 +39,7 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     envvar='SLOBS_PORT',
     show_default=True,
     show_envvar=True,
-    help='The port of the SLOBS server.',
+    help='\b\nStreamlabs Desktop WebSocket port.\t\t\t',
 )
 @click.option(
     '-t',
@@ -42,7 +47,7 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     envvar='SLOBS_TOKEN',
     show_envvar=True,
     required=True,
-    help='The token for the SLOBS server.',
+    help='\b\nStreamlabs Desktop WebSocket authentication token.\t',
 )
 @click.option(
     '-s',
@@ -51,7 +56,7 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     envvar='SLOBS_STYLE',
     show_default=True,
     show_envvar=True,
-    help='The style to use for output.',
+    help='\b\nThe style to use for output.\t\t\t\t',
     callback=validate_style,
 )
 @click.option(
@@ -62,7 +67,7 @@ def validate_style(ctx: click.Context, param: click.Parameter, value: str) -> st
     envvar='SLOBS_STYLE_NO_BORDER',
     show_default=True,
     show_envvar=True,
-    help='Disable borders in the output.',
+    help='\b\nDisable borders in the output.\t\t\t\t',
 )
 @click.version_option(
     version, '-v', '--version', message='%(prog)s version: %(version)s'
