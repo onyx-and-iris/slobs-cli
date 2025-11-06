@@ -22,7 +22,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
 -   Python 3.11 or greater
 -   [Streamlabs Desktop][sl-desktop]
--   A websocket token: Settings > Remote Control > API Token
+-   A websocket token: Settings > Mobile > Third Party Connections > API Token
 
 ## Installation
 
