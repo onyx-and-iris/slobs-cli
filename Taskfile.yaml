@@ -1,0 +1,33 @@
+version: '3'
+
+tasks:
+  default:
+    desc: Generate completion scripts for supported shells
+    cmds:
+      - task: generate-completion-scripts
+
+  generate-completion-scripts:
+    desc: Generate completion scripts for supported shells
+    cmds:
+      - for:
+          matrix:
+            SHELL: [bash, fish, zsh]
+        task: generate-completion-script-{{.ITEM.SHELL}}
+
+  generate-completion-script-bash:
+    desc: Generate bash completion script
+    cmds:
+      - bash -c '_SLOBS_CLI_COMPLETE=bash_source slobs-cli > ./completions/_slobs-cli.bash'
+    internal: true
+
+  generate-completion-script-fish:
+    desc: Generate fish completion script
+    cmds:
+      - fish -c '_SLOBS_CLI_COMPLETE=fish_source slobs-cli > ./completions/_slobs-cli.fish'
+    internal: true
+
+  generate-completion-script-zsh:
+    desc: Generate zsh completion script
+    cmds:
+      - zsh -c '_SLOBS_CLI_COMPLETE=zsh_source slobs-cli > ./completions/_slobs-cli.zsh'
+    internal: true

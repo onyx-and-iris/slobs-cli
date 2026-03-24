@@ -16,6 +16,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 - [Configuration](#configuration)
 - [Style](#style)
 - [Commands](#commands)
+- [Shell Completion](#shell-completion)
 - [License](#license)
 
 ## Requirements
@@ -323,6 +324,66 @@ slobs-cli scenecollection load "ExistingCollection"
 
 ```console
 slobs-cli scenecollection rename "ExistingCollection" "NewName"
+```
+
+## Shell Completion
+
+Shell completion scripts are available for *bash*, *zsh*, and *fish*, you can find them in the [completions directory](./completions/).
+
+#### Bash
+
+Save the script in a completion directory of your choice.
+
+```console
+cp -v ./completions/_slobs-cli.bash ~/.completions/_slobs-cli
+```
+
+Source the file in `~/.bashrc`
+
+```bash
+. ~/.completions/_slobs-cli
+```
+
+Restart the shell
+
+```console
+exec "$SHELL"
+```
+
+#### Fish
+
+Save the script to `~/.config/fish/completions`
+
+```fish
+cp -v ./completions/_slobs-cli.fish ~/.config/fish/completions/_slobs-cli
+```
+
+Restart the shell
+
+```console
+exec "$SHELL"
+```
+
+#### Zsh
+
+Save the script in a completion directory of your choice.
+
+```console
+cp -v ./completions/_slobs-cli.zsh ~/.completions/_slobs-cli
+```
+
+Source the file in `~/.zshrc`
+
+```zsh
+. ~/.completions/_slobs-cli
+```
+
+> Note: If you're using a framework like oh-my-zsh you can copy the completion script straight into $ZSH_CUSTOM/completions and skip modifying ~/.zshrc
+
+Restart the shell
+
+```console
+exec "$SHELL"
 ```
 
 ## Special Thanks
