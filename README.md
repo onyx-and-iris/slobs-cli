@@ -332,7 +332,7 @@ Shell completion scripts are available for *bash*, *zsh*, and *fish*, you can fi
 
 #### Bash
 
-Save the script in a completion directory of your choice.
+Save the script in a completions directory of your choice.
 
 ```console
 cp -v ./completions/_slobs-cli.bash ~/.completions/_slobs-cli
@@ -366,7 +366,7 @@ exec "$SHELL"
 
 #### Zsh
 
-Save the script in a completion directory of your choice.
+Save the script in a completions directory of your choice.
 
 ```console
 cp -v ./completions/_slobs-cli.zsh ~/.completions/_slobs-cli
